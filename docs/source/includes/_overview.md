@@ -25,59 +25,54 @@ YYYY-MM-DDTHH:MM:SSZ
 The returned timezone is UTC.
 
 ## Client Errors
-```
+```http
 HTTP/1.1 400 Bad Request
 Content-Length: 35
-
-{"message":"Problems parsing JSON"}
+{
+  "message":"Problems parsing JSON"
+}
 ```
 
-```
+```http
 HTTP/1.1 422 Unprocessable Entity
- Content-Length: 149
-
- {
-   "errors": [
-     {
-       "field": "title",
-       "message": "title cannot be blank"
-     },
-     {
-       "field": "description",
-       "message": "description must be less than 1000 characters"
-     },
-   ]
- }
+Content-Length: 149
+{
+  "errors": [
+    {
+      "field": "title",
+      "message": "title cannot be blank"
+    },
+    {
+      "field": "description",
+      "message": "description must be less than 1000 characters"
+    },
+  ]
+}
 ```
-
-
-```
+```http
 HTTP/1.1 401 Unprocessable Entity
- Content-Length: 149
-
- {
-   "message": "Authentication Failed",
- }
+Content-Length: 149
+{
+  "message": "Authentication Failed",
+}
 ```
 
 
-```
+```http
 HTTP/1.1 403 Unprocessable Entity
- Content-Length: 149
-
- {
-   "message": "Not authorized action for that resource",
- }
+Content-Length: 149
+{
+  "message": "Not authorized action for that resource",
+}
 ```
 
 
-```
+```http
 HTTP/1.1 500 Unprocessable Entity
- Content-Length: 149
-
- {
-   "message": "Something went terribly wrong here. Open a github issue :)",
- }
+Content-Length: 149
+{
+  "message": "Something went terribly wrong here. Open a github issue :)",
+}
 ```
 
 The client errors are pretty basic, yet helpful.
@@ -95,20 +90,60 @@ Error Code | Meaning
 500 | Internal Server Error -- Something went terribly wrong, open a gihub issue :) 
 
 
-## Authentication and Authentication
+## Authentication
 
+```http
+POST /api/v1/sessions HTTP/1.1
+User-Agent: MyClient/1.0.0
+Accept: application/json
+Host: rails-tutorial-api.heroku.com
+{
+  "user": {
+    "email": "example@railstutorial.org",
+    "password": "123123123"
+  }
+}
+```
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+{
+  "token": "TnQfBY1S/aMdO46sUfXx8mkPa4yxawqgaqVlD2YNzj19QlGI02eFIpoj9YaBtXm3efQZt5oXIQ6DpBw9gvuVGA==",
+  "user_email": "example@railstutorial.org",
+  "user_id": 1
+}
+```
+
+In order to be able to act on behalf of a user, you must first retrieve her token
+via the sessions endpoint.
+
+
+## Authorization
 ```http
 GET /api/v1/resource HTTP/1.1
 User-Agent: MyClient/1.0.0
-Accept: application/vnd.travis-ci.2+json
+Accept: application/json
 Host: rails-tutorial-api.heroku.com
-Authorization: Token token={token_here} user_email={user_email_here}
+Authorization: Token token="TnQfBY1S/aMdO46sUfXx8mkPa4yxawqgaqVlD2YNzj19QlGI02eFIpoj9YaBtXm3efQZt5oXIQ6DpBw9gvuVGA==", user_email="example@railstutorial.org"
+```
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+{
+  "user":{
+    "id":1,
+    "email":"example@railstutorial.org",
+    "name":"Example Use",
+    "activated":true,
+    "created_at":"2015-01-13T20:35:24Z",
+    "updated_at":"2015-02-09T19:47:36Z"
+  }
+}
 ```
 
-You can authenticate in the API by providing a token and an email in the `Authorization` header.
+You can authenticate in the API by providing the user's token and email in the `Authorization` header.
 
 
-However to get that information, you have to send `POST` request to `api/v1/sessions` which is described here.
 
 
 ## Pagination
@@ -151,4 +186,38 @@ Although there are no hard limits, you should follow the limits defined on the A
 
 ## Cross Origin Resource Sharing
 The API supports Cross Origin Resource Sharing (CORS) for AJAX requests from any origin.
+
+## Meta Data
+```http
+GET /api/v1/resources HTTP/1.1
+User-Agent: MyClient/1.0.0
+Accept: application/json
+```
+```http
+HTTP/1.1 200 OK
+Content-Length: 4567
+{
+  "resources": [
+    {
+      "attribute1":1,
+      "attribute2":"test-attribute 1",
+    },
+    {
+      "attribute1":2
+      "attribute2":"test-attribute 2"
+    }
+  ],
+  "meta":{
+    "current_page":45,
+    "next_page":46,
+    "prev_page":44,
+    "total_pages":53,
+    "total_count":105
+  }
+}
+```
+
+In each GET request that acts upon resources, there is an extra field in the response under "meta" root element.
+It includes, the current requested page, next page, previous page, total pages and the total number of resources under the given params.
+
 

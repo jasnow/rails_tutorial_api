@@ -10,6 +10,9 @@ toc_footers:
 
 includes:
   - overview
+  - users
+  - microposts
+  - feed
 
 search: true
 ---
