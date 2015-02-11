@@ -32,7 +32,6 @@ Content-Length: 35
   "message":"Problems parsing JSON"
 }
 ```
-
 ```http
 HTTP/1.1 422 Unprocessable Entity
 Content-Length: 149
@@ -56,8 +55,6 @@ Content-Length: 149
   "message": "Authentication Failed",
 }
 ```
-
-
 ```http
 HTTP/1.1 403 Unprocessable Entity
 Content-Length: 149
@@ -65,8 +62,6 @@ Content-Length: 149
   "message": "Not authorized action for that resource",
 }
 ```
-
-
 ```http
 HTTP/1.1 500 Unprocessable Entity
 Content-Length: 149
