@@ -41,7 +41,8 @@ group :development, :test do
 end
 
 group :development do
-  gem 'annotate', git: 'git@github.com:vasilakisfil/annotate_models.git', branch: 'classified_sort'
+  gem 'annotate', :git => 'https://github.com/vasilakisfil/annotate_models.git',
+    :branch => 'classified_sort'
   gem 'erd'
 end
 

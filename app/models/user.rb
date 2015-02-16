@@ -3,10 +3,10 @@
 # Table name: users
 #
 #  id                   :integer          not null, primary key
-#  activated            :boolean          default("false")
+#  activated            :boolean          default("f")
 #  activated_at         :datetime
 #  activation_digest    :string
-#  admin                :boolean          default("false")
+#  admin                :boolean          default("f")
 #  authentication_token :string
 #  email                :string
 #  name                 :string
